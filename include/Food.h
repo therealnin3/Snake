@@ -7,7 +7,6 @@ class Food
 {
 private:
     Vector2 position;
-
     Vector2 getRandomPosition();
 
 public:

@@ -29,5 +29,5 @@ Vector2 Food::getRandomPosition()
 
 void Food::drawFood()
 {
-    DrawRectangle(position.x, position.y, GRID_CELL_SIZE, GRID_CELL_SIZE, FOOD_COLOR);
+    DrawRectangle(position.x + COMPONENTS_PADDING, position.y + COMPONENTS_PADDING, COMPONENTS_SIZE, COMPONENTS_SIZE, FOOD_COLOR);
 }

@@ -9,6 +9,7 @@
             "args": [
                 "main.cpp",        // Include main.cpp
                 "Food.cpp",        // Include Food.cpp
+                "Snake.cpp",       // Include Snake.cpp
                 "-o",
                 "snake.exe",
                 "-L./lib",

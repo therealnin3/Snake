@@ -9,8 +9,17 @@
 
 // UI Settings
 #define UI_FONT_SIZE 20
-#define UI_FONT_COLOR WHITE
-#define UI_BACKGROUND_COLOR BLACK
+#define UI_FONT_COLOR    \
+    {                    \
+        50, 219, 23, 255 \
+    }
+#define UI_BACKGROUND_COLOR \
+    {                       \
+        30, 30, 30, 255     \
+    }
+#define COMPONENTS_SCALE 0.8
+#define COMPONENTS_SIZE GRID_CELL_SIZE *COMPONENTS_SCALE
+#define COMPONENTS_PADDING (1 - COMPONENTS_SCALE) / 2 * GRID_CELL_SIZE
 
 // Grid Settings
 #define GRID_CELL_SIZE 30
@@ -20,7 +29,10 @@
 
 // Snake Settings
 #define SNAKE_SPEED 1
-#define SNAKE_COLOR GREEN
+#define SNAKE_COLOR      \
+    {                    \
+        50, 219, 23, 255 \
+    }
 
 // Food Settings
 #define FOOD_COLOR RED

@@ -1,7 +1,8 @@
 #include "include/GameSettings.h"
 #include "include/Food.h"
-#include <iostream>
+#include "include/Snake.h"
 #include "include/raylib.h"
+#include <iostream>
 
 // Function prototypes
 void InitializeWindow();
@@ -9,13 +10,16 @@ void DrawBackground();
 void DrawComponents();
 
 Food *food;
+Snake *snake;
 
 int main()
 {
     // Initialize window
     InitializeWindow();
 
+    // Initialize components
     food = new Food();
+    snake = new Snake();
 
     // Main game loop
     while (!WindowShouldClose())
@@ -23,7 +27,7 @@ int main()
         BeginDrawing();
 
         DrawBackground();
-        food->drawFood();
+        DrawComponents();
 
         EndDrawing();
     }
@@ -54,9 +58,10 @@ void DrawBackground()
 void DrawComponents()
 {
     // Draw food
-    // food.drawFood();
+    food->drawFood();
 
     // Draw snake
+    snake->drawSnake();
 }
 
 void InitializeWindow()
