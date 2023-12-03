@@ -8,6 +8,7 @@
 void InitializeWindow();
 void DrawBackground();
 void DrawComponents();
+void ManageSnakeAppleCollision();
 
 Food *food;
 Snake *snake;
@@ -28,6 +29,7 @@ int main()
 
         DrawBackground();
         DrawComponents();
+        ManageSnakeAppleCollision();
 
         EndDrawing();
     }
@@ -68,4 +70,19 @@ void InitializeWindow()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_NAME);
     SetTargetFPS(FPS);
+}
+
+void ManageSnakeAppleCollision()
+{
+    Vector2 headPosition = snake->getHeadPosition();
+    Vector2 applePosition = food->getPosition();
+
+    std::cout << "Head position: " << headPosition.x << ", " << headPosition.y << std::endl;
+    std::cout << "Apple position: " << applePosition.x << ", " << applePosition.y << std::endl;
+
+    if (headPosition.x == applePosition.x && headPosition.y == applePosition.y)
+    {
+        food->respawnFood(snake->getPositionsOfSnake());
+        snake->grow();
+    }
 }

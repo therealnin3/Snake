@@ -28,7 +28,7 @@
 #define GRID_PADDING 30
 
 // Snake Settings
-#define SNAKE_SPEED 1
+#define SNAKE_INTERVAL_TIME 0.2
 #define SNAKE_COLOR      \
     {                    \
         50, 219, 23, 255 \

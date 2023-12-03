@@ -1,7 +1,8 @@
-#include "raylib.h"
-
 #ifndef FOOD_H
 #define FOOD_H
+
+#include "raylib.h"
+#include <deque>
 
 class Food
 {
@@ -11,8 +12,9 @@ private:
 
 public:
     Food();
-    void respawnFood();
+    void respawnFood(std::deque<Vector2> snakePositions);
     void drawFood();
+    Vector2 getPosition();
 };
 
 #endif // FOOD_H
