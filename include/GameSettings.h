@@ -17,9 +17,6 @@
     {                       \
         30, 30, 30, 255     \
     }
-#define COMPONENTS_SCALE 0.8
-#define COMPONENTS_SIZE GRID_CELL_SIZE *COMPONENTS_SCALE
-#define COMPONENTS_PADDING (1 - COMPONENTS_SCALE) / 2 * GRID_CELL_SIZE
 
 // Grid Settings
 #define GRID_CELL_SIZE 30

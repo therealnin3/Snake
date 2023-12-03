@@ -77,9 +77,6 @@ void ManageSnakeAppleCollision()
     Vector2 headPosition = snake->getHeadPosition();
     Vector2 applePosition = food->getPosition();
 
-    std::cout << "Head position: " << headPosition.x << ", " << headPosition.y << std::endl;
-    std::cout << "Apple position: " << applePosition.x << ", " << applePosition.y << std::endl;
-
     if (headPosition.x == applePosition.x && headPosition.y == applePosition.y)
     {
         food->respawnFood(snake->getPositionsOfSnake());

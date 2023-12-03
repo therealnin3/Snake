@@ -2,19 +2,27 @@
 #include "include/GameSettings.h"
 #include "include/raylib.h"
 #include <deque>
+#include <iostream>
 
-Vector2 direction = {0, 0};
+Vector2 direction;
+Vector2 tempDirection;
 std::deque<Vector2> snakeBody;
-float lastUpdateTime = 0;
-bool mustGrow = false;
+float lastUpdateTime;
+bool mustGrow;
 
 // Constructor
 Snake::Snake()
 {
-    // Starting positions
-    snakeBody.push_back({GRID_X / 2, GRID_Y / 2});
-    snakeBody.push_back({GRID_X / 2, GRID_Y / 2 + 1});
-    snakeBody.push_back({GRID_X / 2, GRID_Y / 2 + 2});
+    // Starting variables
+    direction = {0, 0};
+    tempDirection = {0, 0};
+    mustGrow = false;
+    lastUpdateTime = 0;
+
+    Vector2 startingPos = {(int)(GRID_X / 2), (int)(GRID_Y / 2)};
+    snakeBody.push_back(startingPos);
+    snakeBody.push_back({startingPos.x, startingPos.y + 1});
+    snakeBody.push_back({startingPos.x, startingPos.y + 2});
 }
 
 // Destructor
@@ -31,36 +39,30 @@ void Snake::drawSnake()
     // Draw new position
     for (int i = 0; i < snakeBody.size(); i++)
     {
-        Rectangle r = {float(GRID_PADDING + snakeBody[i].x * GRID_CELL_SIZE + COMPONENTS_PADDING), float(GRID_PADDING + snakeBody[i].y * GRID_CELL_SIZE + COMPONENTS_PADDING), COMPONENTS_SIZE, COMPONENTS_SIZE};
-        DrawRectangleRounded(r, 0.25f, 0, SNAKE_COLOR);
+        DrawRectangle(snakeBody[i].x * GRID_CELL_SIZE + GRID_PADDING, snakeBody[i].y * GRID_CELL_SIZE + GRID_PADDING, GRID_CELL_SIZE, GRID_CELL_SIZE, GREEN);
     }
 }
 
 // Move snake
 void Snake::move()
 {
-    // Get input
-    if (IsKeyPressed(KEY_UP) && direction.y != 1)
-    {
-        direction = {0, -1};
-    }
-    else if (IsKeyPressed(KEY_DOWN) && direction.y != -1)
-    {
-        direction = {0, 1};
-    }
-    else if (IsKeyPressed(KEY_LEFT) && direction.x != 1)
-    {
-        direction = {-1, 0};
-    }
-    else if (IsKeyPressed(KEY_RIGHT) && direction.x != -1)
-    {
-        direction = {1, 0};
-    }
 
-    // Don't move if no input
-    if (direction.x == 0 && direction.y == 0)
+    // Get input
+    if (IsKeyPressed(KEY_UP))
     {
-        return;
+        tempDirection = {0, -1};
+    }
+    else if (IsKeyPressed(KEY_DOWN))
+    {
+        tempDirection = {0, 1};
+    }
+    else if (IsKeyPressed(KEY_LEFT))
+    {
+        tempDirection = {-1, 0};
+    }
+    else if (IsKeyPressed(KEY_RIGHT))
+    {
+        tempDirection = {1, 0};
     }
 
     // Update snake position
@@ -68,28 +70,31 @@ void Snake::move()
     {
         lastUpdateTime = GetTime();
 
-        if (mustGrow)
-        {
-            // Handle snake growth
-            snakeBody.push_front({snakeBody[0].x + direction.x, snakeBody[0].y + direction.y});
-            mustGrow = false;
-        }
-        else
-        {
-            // Handle snake movement
-            snakeBody.pop_back();
-            snakeBody.push_front({snakeBody[0].x + direction.x, snakeBody[0].y + direction.y});
-        }
+        // TODO: check temp and direction
+
+        // if (mustGrow)
+        // {
+        //     // Handle snake growth
+        //     snakeBody.push_front({snakeBody[0].x + tempDirection.x, snakeBody[0].y + tempDirection.y});
+        //     mustGrow = false;
+        // }
+        // else
+        // {
+        //     // Handle snake movement
+        //     snakeBody.pop_back();
+        //     snakeBody.push_front({snakeBody[0].x + tempDirection.x, snakeBody[0].y + tempDirection.y});
+        // }
 
         // Check for collide after move
         if (isCollidingWithSelf())
         {
             // Game Over
-            snakeBody.clear();
-            snakeBody.push_back({GRID_X / 2, GRID_Y / 2});
-            snakeBody.push_back({GRID_X / 2, GRID_Y / 2 + 1});
-            snakeBody.push_back({GRID_X / 2, GRID_Y / 2 + 2});
+            std::cout << "Game Over" << std::endl;
         }
+
+        // Update direction and reset tempDirection
+        direction = tempDirection;
+        tempDirection = {0, 0};
     }
 }
 
