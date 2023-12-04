@@ -48,10 +48,8 @@ void Snake::drawSnake()
     }
 }
 
-// Move snake
 void Snake::move()
 {
-
     // Get input
     if (IsKeyPressed(KEY_UP) && currentDirection.y != 1)
     {
@@ -82,21 +80,11 @@ void Snake::move()
             currentDirection.x = direction.x;
             currentDirection.y = direction.y;
 
-            if (mustGrow)
-            {
-                // Handle snake growth
-                snakeBody.push_front({snakeBody[0].x + currentDirection.x, snakeBody[0].y + currentDirection.y});
-                mustGrow = false;
-            }
-            else
-            {
-                // Handle snake movement
-                snakeBody.pop_back();
-                snakeBody.push_front({snakeBody[0].x + currentDirection.x, snakeBody[0].y + currentDirection.y});
-            }
+            // Calculate new head position
+            Vector2 newHead = {snakeBody[0].x + currentDirection.x, snakeBody[0].y + currentDirection.y};
 
-            // Check for collide after move
-            if (isCollidingWithSelf())
+            // Check for collisions with walls and itself
+            if (isCollidingWithWall(newHead) || isCollidingWithSelf(newHead))
             {
                 // Game Over
                 std::cout << "Game Over" << std::endl;
@@ -107,21 +95,40 @@ void Snake::move()
                     // hang
                 }
             }
+            else
+            {
+                // Handle snake movement and growth
+                snakeBody.push_front(newHead);
+
+                if (mustGrow)
+                {
+                    mustGrow = false;
+                }
+                else
+                {
+                    snakeBody.pop_back();
+                }
+            }
         }
     }
 }
 
-// Check if snake is colliding with itself
-bool Snake::isCollidingWithSelf()
+// Check if snake is colliding with wall at the given position
+bool Snake::isCollidingWithWall(const Vector2 &position)
 {
-    for (int i = 1; i < snakeBody.size(); i++)
+    return (position.x < 0 || position.x >= GRID_X || position.y < 0 || position.y >= GRID_Y);
+}
+
+// Check if snake is colliding with itself at the given position
+bool Snake::isCollidingWithSelf(const Vector2 &position)
+{
+    for (const auto &bodyPart : snakeBody)
     {
-        if (snakeBody[0].x == snakeBody[i].x && snakeBody[0].y == snakeBody[i].y)
+        if (position.x == bodyPart.x && position.y == bodyPart.y)
         {
             return true;
         }
     }
-
     return false;
 }
 

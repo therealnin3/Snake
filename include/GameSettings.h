@@ -3,7 +3,8 @@
 
 // Window Settings
 #define WINDOW_NAME "Snake"
-#define SCREEN_WIDTH GRID_CELL_SIZE *GRID_X + GRID_PADDING * 2
+#define UI_SECTION_WIDTH 300
+#define SCREEN_WIDTH GRID_CELL_SIZE *GRID_X + GRID_PADDING * 2 + UI_SECTION_WIDTH
 #define SCREEN_HEIGHT GRID_CELL_SIZE *GRID_Y + GRID_PADDING * 2
 #define FPS 60
 
@@ -23,7 +24,6 @@
     {                   \
         39, 73, 33, 255 \
     }
-#define GRID_THICKNESS 2
 #define GRID_CELL_SIZE 30
 #define GRID_X 20
 #define GRID_Y 20

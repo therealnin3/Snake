@@ -10,7 +10,8 @@ private:
     std::deque<Vector2> snakeBody;
     Vector2 direction;
     double lastUpdateTime;
-    bool isCollidingWithSelf();
+    bool isCollidingWithSelf(const Vector2 &position);
+    bool isCollidingWithWall(const Vector2 &position);
     bool mustGrow;
     void playDeathAnimation();
     bool deathAnimationPlaying;
