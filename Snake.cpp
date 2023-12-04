@@ -3,19 +3,24 @@
 #include "include/raylib.h"
 #include <deque>
 #include <iostream>
+#include <synchapi.h>
+#include <thread>
 
 Vector2 direction;
-Vector2 tempDirection;
+Vector2 currentDirection;
 std::deque<Vector2> snakeBody;
 float lastUpdateTime;
 bool mustGrow;
+bool snakeIsAlive;
 
 // Constructor
 Snake::Snake()
 {
     // Starting variables
+    deathAnimationPlaying = false;
+    snakeIsAlive = true;
     direction = {0, 0};
-    tempDirection = {0, 0};
+    currentDirection = {0, 0};
     mustGrow = false;
     lastUpdateTime = 0;
 
@@ -48,53 +53,61 @@ void Snake::move()
 {
 
     // Get input
-    if (IsKeyPressed(KEY_UP))
+    if (IsKeyPressed(KEY_UP) && currentDirection.y != 1)
     {
-        tempDirection = {0, -1};
+        direction = {0, -1};
     }
-    else if (IsKeyPressed(KEY_DOWN))
+    else if (IsKeyPressed(KEY_DOWN) && currentDirection.y != -1)
     {
-        tempDirection = {0, 1};
+        direction = {0, 1};
     }
-    else if (IsKeyPressed(KEY_LEFT))
+    else if (IsKeyPressed(KEY_LEFT) && currentDirection.x != 1)
     {
-        tempDirection = {-1, 0};
+        direction = {-1, 0};
     }
-    else if (IsKeyPressed(KEY_RIGHT))
+    else if (IsKeyPressed(KEY_RIGHT) && currentDirection.x != -1)
     {
-        tempDirection = {1, 0};
+        direction = {1, 0};
     }
 
-    // Update snake position
-    if (GetTime() - lastUpdateTime > SNAKE_INTERVAL_TIME)
+    // Only move snake if key is pressed
+    if (direction.x != 0 || direction.y != 0)
     {
-        lastUpdateTime = GetTime();
-
-        // TODO: check temp and direction
-
-        // if (mustGrow)
-        // {
-        //     // Handle snake growth
-        //     snakeBody.push_front({snakeBody[0].x + tempDirection.x, snakeBody[0].y + tempDirection.y});
-        //     mustGrow = false;
-        // }
-        // else
-        // {
-        //     // Handle snake movement
-        //     snakeBody.pop_back();
-        //     snakeBody.push_front({snakeBody[0].x + tempDirection.x, snakeBody[0].y + tempDirection.y});
-        // }
-
-        // Check for collide after move
-        if (isCollidingWithSelf())
+        // Update snake position
+        if (GetTime() - lastUpdateTime > SNAKE_INTERVAL_TIME)
         {
-            // Game Over
-            std::cout << "Game Over" << std::endl;
-        }
+            // Enter legal interval
+            lastUpdateTime = GetTime();
 
-        // Update direction and reset tempDirection
-        direction = tempDirection;
-        tempDirection = {0, 0};
+            currentDirection.x = direction.x;
+            currentDirection.y = direction.y;
+
+            if (mustGrow)
+            {
+                // Handle snake growth
+                snakeBody.push_front({snakeBody[0].x + currentDirection.x, snakeBody[0].y + currentDirection.y});
+                mustGrow = false;
+            }
+            else
+            {
+                // Handle snake movement
+                snakeBody.pop_back();
+                snakeBody.push_front({snakeBody[0].x + currentDirection.x, snakeBody[0].y + currentDirection.y});
+            }
+
+            // Check for collide after move
+            if (isCollidingWithSelf())
+            {
+                // Game Over
+                std::cout << "Game Over" << std::endl;
+                snakeIsAlive = false;
+                playDeathAnimation();
+                while (deathAnimationPlaying)
+                {
+                    // hang
+                }
+            }
+        }
     }
 }
 
@@ -128,4 +141,43 @@ void Snake::grow()
 std::deque<Vector2> Snake::getPositionsOfSnake()
 {
     return snakeBody;
+}
+
+// Play death animation
+void Snake::playDeathAnimation()
+{
+    deathAnimationPlaying = true;
+    float flicker_interval_seconds = 0.25f; // Change to float
+    int flicker_times = 5;
+
+    for (int i = 0; i < flicker_times; i++)
+    {
+        // Flicker snake
+        for (int i = 0; i < snakeBody.size(); i++)
+        {
+            DrawRectangle(snakeBody[i].x * GRID_CELL_SIZE + GRID_PADDING, snakeBody[i].y * GRID_CELL_SIZE + GRID_PADDING, GRID_CELL_SIZE, GRID_CELL_SIZE, WHITE);
+        }
+
+        EndDrawing();
+        std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(flicker_interval_seconds * 1000)));
+
+        BeginDrawing(); // Restart drawing
+
+        // Flicker snake
+        for (int i = 0; i < snakeBody.size(); i++)
+        {
+            DrawRectangle(snakeBody[i].x * GRID_CELL_SIZE + GRID_PADDING, snakeBody[i].y * GRID_CELL_SIZE + GRID_PADDING, GRID_CELL_SIZE, GRID_CELL_SIZE, SNAKE_COLOR);
+        }
+
+        EndDrawing();
+        std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(flicker_interval_seconds * 1000)));
+
+        BeginDrawing(); // Restart drawing
+    }
+
+    deathAnimationPlaying = false;
+}
+bool Snake::isSnakeAlive()
+{
+    return snakeIsAlive;
 }

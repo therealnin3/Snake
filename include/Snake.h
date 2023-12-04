@@ -12,6 +12,8 @@ private:
     double lastUpdateTime;
     bool isCollidingWithSelf();
     bool mustGrow;
+    void playDeathAnimation();
+    bool deathAnimationPlaying;
 
 public:
     Snake();
@@ -22,6 +24,7 @@ public:
     Vector2 getHeadPosition();
     void grow();
     std::deque<Vector2> getPositionsOfSnake();
+    bool isSnakeAlive();
 };
 
 #endif // SNAKE_H

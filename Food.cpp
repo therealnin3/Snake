@@ -3,9 +3,9 @@
 #include "include/raylib.h"
 
 // Constructor
-Food::Food()
+Food::Food(std::deque<Vector2> snakePositions)
 {
-    respawnFood({});
+    respawnFood(snakePositions);
 }
 
 // Respawn food at a random location
@@ -51,7 +51,7 @@ Vector2 Food::getRandomPosition()
 
 void Food::drawFood()
 {
-    DrawRectangle(this->position.x * GRID_CELL_SIZE + GRID_PADDING, this->position.y * GRID_CELL_SIZE + GRID_PADDING, GRID_CELL_SIZE, GRID_CELL_SIZE, RED);
+    DrawRectangle(this->position.x * GRID_CELL_SIZE + GRID_PADDING + FOOD_PADDING, this->position.y * GRID_CELL_SIZE + GRID_PADDING + FOOD_PADDING, GRID_CELL_SIZE * FOOD_SCALE, GRID_CELL_SIZE * FOOD_SCALE, FOOD_COLOR);
 }
 
 Vector2 Food::getPosition()

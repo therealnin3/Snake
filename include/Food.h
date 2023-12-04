@@ -11,7 +11,7 @@ private:
     Vector2 getRandomPosition();
 
 public:
-    Food();
+    Food(std::deque<Vector2> snakePositions);
     void respawnFood(std::deque<Vector2> snakePositions);
     void drawFood();
     Vector2 getPosition();

@@ -9,6 +9,7 @@ void InitializeWindow();
 void DrawBackground();
 void DrawComponents();
 void ManageSnakeAppleCollision();
+void ManageWinCondition();
 
 Food *food;
 Snake *snake;
@@ -19,8 +20,8 @@ int main()
     InitializeWindow();
 
     // Initialize components
-    food = new Food();
     snake = new Snake();
+    food = new Food(snake->getPositionsOfSnake());
 
     // Main game loop
     while (!WindowShouldClose())
@@ -30,6 +31,7 @@ int main()
         DrawBackground();
         DrawComponents();
         ManageSnakeAppleCollision();
+        ManageWinCondition();
 
         EndDrawing();
     }
@@ -45,15 +47,16 @@ void DrawBackground()
     // Clear background
     ClearBackground(UI_BACKGROUND_COLOR);
 
-    // Draw grid
-    for (int i = 0; i <= GRID_X; i++)
+    // Draw vertical grid lines
+    for (int i = 0; i < GRID_X + 1; i++)
     {
-        DrawLine(GRID_PADDING + i * GRID_CELL_SIZE, GRID_PADDING, GRID_PADDING + i * GRID_CELL_SIZE, SCREEN_HEIGHT - GRID_PADDING, DARKGRAY);
+        DrawLine(GRID_PADDING + i * GRID_CELL_SIZE, GRID_PADDING, GRID_PADDING + i * GRID_CELL_SIZE, GRID_PADDING + GRID_CELL_SIZE * GRID_Y, GRID_COLOR);
     }
 
-    for (int i = 0; i <= GRID_Y; i++)
+    // Draw horizontal grid lines
+    for (int i = 0; i < GRID_Y + 1; i++)
     {
-        DrawLine(GRID_PADDING, GRID_PADDING + i * GRID_CELL_SIZE, SCREEN_WIDTH - GRID_PADDING, GRID_PADDING + i * GRID_CELL_SIZE, DARKGRAY);
+        DrawLine(GRID_PADDING, GRID_PADDING + i * GRID_CELL_SIZE, GRID_PADDING + GRID_CELL_SIZE * GRID_X, GRID_PADDING + i * GRID_CELL_SIZE, GRID_COLOR);
     }
 }
 
@@ -81,5 +84,19 @@ void ManageSnakeAppleCollision()
     {
         food->respawnFood(snake->getPositionsOfSnake());
         snake->grow();
+    }
+}
+
+void ManageWinCondition()
+{
+    if (snake->isSnakeAlive() == false)
+    {
+        std::cout << "You died!" << std::endl;
+
+        // Restart game
+        delete food;
+        delete snake;
+        snake = new Snake();
+        food = new Food(snake->getPositionsOfSnake());
     }
 }

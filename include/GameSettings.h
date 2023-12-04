@@ -15,13 +15,18 @@
     }
 #define UI_BACKGROUND_COLOR \
     {                       \
-        30, 30, 30, 255     \
+        19, 19, 19, 255     \
     }
 
 // Grid Settings
+#define GRID_COLOR      \
+    {                   \
+        39, 73, 33, 255 \
+    }
+#define GRID_THICKNESS 2
 #define GRID_CELL_SIZE 30
-#define GRID_X 25
-#define GRID_Y 25
+#define GRID_X 20
+#define GRID_Y 20
 #define GRID_PADDING 30
 
 // Snake Settings
@@ -32,6 +37,9 @@
     }
 
 // Food Settings
-#define FOOD_COLOR RED
+#define FOOD_COLOR SNAKE_COLOR
+#define FOOD_SCALE 0.3
+#define FOOD_PADDING (GRID_CELL_SIZE - (GRID_CELL_SIZE * FOOD_SCALE)) / 2
+#define FOOD_SCORE 10
 
 #endif // GAME_SETTINGS_H
